@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Cuaca</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="weather-container">
+        <div class="header">INFO CUACA</div>
+        <div class="search-bar">
+            <input type="text" id="locationInput" placeholder="Masukkan nama kota...">
+            <button id="searchButton">Cari</button>
+        </div>
+        <div class="weather-info" id="weatherInfo">
+            <p id="message">Silakan masukkan nama kota untuk melihat info cuaca.</p>
+            <div id="result" class="hidden">
+                <p><strong>Lokasi:</strong> <span id="lokasi"></span></p>
+                <p><strong>Negara:</strong> <span id="negara"></span></p>
+                <p><strong>Provinsi:</strong> <span id="provinsi"></span></p>
+                <p><strong>Suhu:</strong> <span id="suhu"></span></p>
+                <p><strong>Kelembaban:</strong> <span id="kelembaban"></span></p>
+                <p><strong>Latitude:</strong> <span id="latitude"></span></p>
+                <p><strong>Longitude:</strong> <span id="longitude"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
