@@ -1,33 +1,198 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Cuaca</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        :root {
+            --bg-color: #f0f4f8;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --primary-color: #007bff;
+            --primary-hover-color: #0056b3;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+        }
+
+        .weather-card {
+            background-color: var(--card-color);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px var(--shadow-color);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        #location-input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #location-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        #search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #search-button:hover {
+            background-color: var(--primary-hover-color);
+        }
+
+        .weather-info {
+            display: none;
+        }
+
+        .location-details h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .location-details p {
+            margin: 5px 0 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        .weather-details {
+            margin-top: 1rem;
+        }
+
+        .weather-details p {
+            margin: 0.75rem 0;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .weather-details strong {
+            font-weight: 500;
+            margin-right: 8px;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            margin-top: 1rem;
+            display: none;
+        }
+
+    </style>
 </head>
 <body>
 
-    <div class="weather-container">
-        <div class="header">INFO CUACA</div>
-        <div class="search-bar">
-            <input type="text" id="locationInput" placeholder="Masukkan nama kota...">
-            <button id="searchButton">Cari</button>
+    <div class="weather-card">
+        <h2>Info Cuaca</h2>
+        <div class="search-container">
+            <input type="text" id="location-input" placeholder="Masukkan lokasi (misal: Yogyakarta)">
+            <button id="search-button">Get</button>
         </div>
-        <div class="weather-info" id="weatherInfo">
-            <p id="message">Silakan masukkan nama kota untuk melihat info cuaca.</p>
-            <div id="result" class="hidden">
-                <p><strong>Lokasi:</strong> <span id="lokasi"></span></p>
-                <p><strong>Negara:</strong> <span id="negara"></span></p>
-                <p><strong>Provinsi:</strong> <span id="provinsi"></span></p>
-                <p><strong>Suhu:</strong> <span id="suhu"></span></p>
-                <p><strong>Kelembaban:</strong> <span id="kelembaban"></span></p>
-                <p><strong>Latitude:</strong> <span id="latitude"></span></p>
-                <p><strong>Longitude:</strong> <span id="longitude"></span></p>
+
+        <div id="weather-display" class="weather-info">
+            <div class="location-details">
+                <h2 id="location-name"></h2>
+                <p id="lat-lon"></p>
+            </div>
+            
+            <img src="" alt="Weather Icon" id="weather-icon" class="weather-icon">
+            
+            <div class="weather-details">
+                <p id="condition"></p>
+                <p id="temperature"></p>
+                <p id="humidity"></p>
+                <p id="wind-speed"></p>
             </div>
         </div>
+        <p id="error-message" class="error-message">Lokasi tidak ditemukan. Silakan coba lagi.</p>
     </div>
 
-    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const apiKey = "10b97284bb6c42e5bdf11006250610";
+            const weatherDisplay = $("#weather-display");
+            const errorMessage = $("#error-message");
+
+            function fetchWeather(location) {
+                const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=no`;
+
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    success: function(data) {
+                        errorMessage.hide();
+                        weatherDisplay.show();
+
+                        $("#location-name").text(`${data.location.name}, ${data.location.country}`);
+                        $("#lat-lon").text(`Lat: ${data.location.lat}, Lon: ${data.location.lon}`);
+                        $("#weather-icon").attr("src", `https:${data.current.condition.icon}`);
+                        $("#condition").html(`<strong>Kondisi:</strong> ${data.current.condition.text}`);
+                        $("#temperature").html(`<strong>Suhu:</strong> ${data.current.temp_c}°C`);
+                        $("#humidity").html(`<strong>Kelembapan:</strong> ${data.current.humidity}%`);
+                        $("#wind-speed").html(`<strong>Angin:</strong> ${data.current.wind_kph} kph`);
+                    },
+                    error: function(error) {
+                        console.error("Error fetching weather data:", error);
+                        weatherDisplay.hide();
+                        errorMessage.show();
+                    }
+                });
+            }
+
+            $("#search-button").on("click", function() {
+                const location = $("#location-input").val();
+                if (location) {
+                    fetchWeather(location);
+                }
+            });
+
+            $("#location-input").on("keypress", function(event) {
+                if (event.key === "Enter") {
+                    $("#search-button").click();
+                }
+            });
+            
+            fetchWeather("Yogyakarta");
+        });
+    </script>
 </body>
 </html>

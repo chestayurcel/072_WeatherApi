@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationInput = document.getElementById('locationInput');
     
     // API Key Anda sudah dimasukkan
-    const apiKey = "83e327711277c16695693aee4c949b39"; 
+    const apiKey = "83e327711277c16695693aee4c949b39";
 
     const messageElement = document.getElementById('message');
     const resultElement = document.getElementById('result');
