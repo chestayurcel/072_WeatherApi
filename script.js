@@ -42,6 +42,5 @@ $(document).ready(function() {
         }
     });
     
-    // Memuat cuaca default saat halaman pertama kali dibuka
     fetchWeather("Yogyakarta");
 });
