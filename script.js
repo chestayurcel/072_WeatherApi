@@ -13,7 +13,7 @@ $(document).ready(function() {
                 errorMessage.hide();
                 weatherDisplay.show();
 
-                $("#location-name").text(`${data.location.name}, ${data.location.country}`);
+                $("#location-name").text(`${data.location.name}, ${data.location.region}, ${data.location.country}`);
                 $("#lat-lon").text(`Lat: ${data.location.lat}, Lon: ${data.location.lon}`);
                 $("#weather-icon").attr("src", `https:${data.current.condition.icon}`);
                 $("#condition").html(`<strong>Kondisi:</strong> ${data.current.condition.text}`);
